@@ -1,5 +1,7 @@
 {
+  "author": "Erdem Emiroglu",
   "name": "webrtc-assessment",
+  "description": "OCR Labs assessment for frontend developer position",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -16,5 +18,10 @@
     "react-dom": "18.2.0",
     "socket.io": "^4.6.1",
     "socket.io-client": "^4.6.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.7"
   }
 }
