@@ -1,6 +1,6 @@
-import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
-import { io } from 'socket.io-client';
+import {useRouter} from 'next/router';
+import {useEffect, useRef, useState} from 'react';
+import {io} from 'socket.io-client';
 import {useMediaActions} from "@/store/slices/mediaActionsSlice";
 import useSocket from '@/hooks/useSocket';
 
@@ -24,7 +24,22 @@ const Room = () => {
     const userStreamRef = useRef();
     const hostRef = useRef(false);
 
-    const { id: roomName } = router.query;
+    const [ready, setReady] = useState(false);
+
+    const {id: roomName} = router.query;
+
+    useEffect(() => {
+        if (ready) {
+            toggleMediaStream('audio', micActive);
+        }
+    }, [micActive, ready]);
+
+    useEffect(() => {
+        if (ready) {
+            toggleMediaStream('video', cameraActive);
+        }
+    }, [cameraActive, ready]);
+
     useEffect(() => {
         socketRef.current = io();
         // First we join a room
@@ -57,7 +72,7 @@ const Room = () => {
         navigator.mediaDevices
             .getUserMedia({
                 audio: true,
-                video: { width: 500, height: 500 },
+                video: {width: 500, height: 500},
             })
             .then((stream) => {
                 /* use the stream */
@@ -67,6 +82,7 @@ const Room = () => {
                     userVideoRef.current.play();
                 };
                 socketRef.current.emit('ready', roomName);
+                setReady(true);
             })
             .catch((err) => {
                 /* handle the error */
@@ -74,14 +90,12 @@ const Room = () => {
             });
     };
 
-
-
     const handleRoomCreated = () => {
         hostRef.current = true;
         navigator.mediaDevices
             .getUserMedia({
                 audio: true,
-                video: { width: 500, height: 500 },
+                video: {width: 500, height: 500},
             })
             .then((stream) => {
                 /* use the stream */
@@ -90,6 +104,7 @@ const Room = () => {
                 userVideoRef.current.onloadedmetadata = () => {
                     userVideoRef.current.play();
                 };
+                setReady(true);
             })
             .catch((err) => {
                 /* handle the error */
@@ -204,27 +219,15 @@ const Room = () => {
     };
 
     const handleTrackEvent = (event) => {
-        // eslint-disable-next-line prefer-destructuring
         peerVideoRef.current.srcObject = event.streams[0];
     };
 
     const toggleMediaStream = (type, state) => {
         userStreamRef.current.getTracks().forEach((track) => {
             if (track.kind === type) {
-                // eslint-disable-next-line no-param-reassign
-                track.enabled = !state;
+                track.enabled = state;
             }
         });
-    };
-
-    const handleToggleMic = () => {
-        toggleMediaStream('audio', micActive);
-        toggleMic();
-    };
-
-    const handleToggleCam = () => {
-        toggleMediaStream('video', cameraActive);
-        toggleCamera();
     };
 
     const leaveRoom = () => {
@@ -252,16 +255,21 @@ const Room = () => {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-light">
             <div className="flex flex-col items-center w-full max-w-screen-md space-y-4">
-                <video autoPlay ref={userVideoRef} className="w-64 h-64 md:w-96 md:h-96 border-4 border-blue rounded-lg shadow-lg" />
-                <video autoPlay ref={peerVideoRef} className="w-64 h-64 md:w-96 md:h-96 border-4 border-purple rounded-lg shadow-lg" />
+                <video autoPlay ref={userVideoRef}
+                       className="w-64 h-64 md:w-96 md:h-96 border-4 border-blue rounded-lg shadow-lg"/>
+                <video autoPlay ref={peerVideoRef}
+                       className="w-64 h-64 md:w-96 md:h-96 border-4 border-purple rounded-lg shadow-lg"/>
                 <div className="flex space-x-4">
-                    <button onClick={handleToggleMic} type="button" className="bg-blue text-white rounded-lg px-4 py-2 hover:bg-blue-700">
+                    <button onClick={toggleMic} type="button"
+                            className="bg-blue text-white rounded-lg px-4 py-2 hover:bg-blue-700">
                         {micActive ? 'Mute Mic' : 'Unmute Mic'}
                     </button>
-                    <button onClick={leaveRoom} type="button" className="bg-orange text-white rounded-lg px-4 py-2 hover:bg-orange-700">
+                    <button onClick={leaveRoom} type="button"
+                            className="bg-orange text-white rounded-lg px-4 py-2 hover:bg-orange-700">
                         Leave
                     </button>
-                    <button onClick={handleToggleCam} type="button" className="bg-green text-white rounded-lg px-4 py-2 hover:bg-green-700">
+                    <button onClick={toggleCamera} type="button"
+                            className="bg-green text-white rounded-lg px-4 py-2 hover:bg-green-700">
                         {cameraActive ? 'Stop Camera' : 'Start Camera'}
                     </button>
                 </div>
