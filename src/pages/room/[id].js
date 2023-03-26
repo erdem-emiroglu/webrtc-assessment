@@ -1,7 +1,8 @@
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
-import useSocket from '../../hooks/useSocket';
+import {useMediaActions} from "@/store/slices/mediaActionsSlice";
+import useSocket from '@/hooks/useSocket';
 
 const ICE_SERVERS = {
     iceServers: [
@@ -13,8 +14,7 @@ const ICE_SERVERS = {
 
 const Room = () => {
     useSocket();
-    const [micActive, setMicActive] = useState(true);
-    const [cameraActive, setCameraActive] = useState(true);
+    const {toggleCamera, toggleMic, cameraActive, micActive} = useMediaActions();
 
     const router = useRouter();
     const userVideoRef = useRef();
@@ -217,14 +217,14 @@ const Room = () => {
         });
     };
 
-    const toggleMic = () => {
+    const handleToggleMic = () => {
         toggleMediaStream('audio', micActive);
-        setMicActive((prev) => !prev);
+        toggleMic();
     };
 
-    const toggleCamera = () => {
+    const handleToggleCam = () => {
         toggleMediaStream('video', cameraActive);
-        setCameraActive((prev) => !prev);
+        toggleCamera();
     };
 
     const leaveRoom = () => {
@@ -250,18 +250,22 @@ const Room = () => {
     };
 
     return (
-        <div>
-            <video autoPlay ref={userVideoRef} />
-            <video autoPlay ref={peerVideoRef} />
-            <button onClick={toggleMic} type="button">
-                {micActive ? 'Mute Mic' : 'UnMute Mic'}
-            </button>
-            <button onClick={leaveRoom} type="button">
-                Leave
-            </button>
-            <button onClick={toggleCamera} type="button">
-                {cameraActive ? 'Stop Camera' : 'Start Camera'}
-            </button>
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-light">
+            <div className="flex flex-col items-center w-full max-w-screen-md space-y-4">
+                <video autoPlay ref={userVideoRef} className="w-64 h-64 md:w-96 md:h-96 border-4 border-blue rounded-lg shadow-lg" />
+                <video autoPlay ref={peerVideoRef} className="w-64 h-64 md:w-96 md:h-96 border-4 border-purple rounded-lg shadow-lg" />
+                <div className="flex space-x-4">
+                    <button onClick={handleToggleMic} type="button" className="bg-blue text-white rounded-lg px-4 py-2 hover:bg-blue-700">
+                        {micActive ? 'Mute Mic' : 'Unmute Mic'}
+                    </button>
+                    <button onClick={leaveRoom} type="button" className="bg-orange text-white rounded-lg px-4 py-2 hover:bg-orange-700">
+                        Leave
+                    </button>
+                    <button onClick={handleToggleCam} type="button" className="bg-green text-white rounded-lg px-4 py-2 hover:bg-green-700">
+                        {cameraActive ? 'Stop Camera' : 'Start Camera'}
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };
