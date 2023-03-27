@@ -25,10 +25,10 @@ export default function Home() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 flex items-center justify-center py-5 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-lg">
-                <Title title="Join a Room" className="text-2xl font-semibold text-center text-indigo-600" />
-                <div className="w-full bg-gradient-to-r from-blue-400 to-purple-600 p-0.5 rounded-lg">
+        <div className="home__container">
+            <div className="join__room">
+                <Title title="Join a Room" className="join__room__title" />
+                <div className="join__room__input__wrapper">
                     <Input
                         onChange={(e) => setRoomName(e.target.value)}
                         value={roomName}
@@ -40,7 +40,7 @@ export default function Home() {
                 <Button
                     onClick={handleOpenModal}
                     title="Join"
-                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+                    className="w-full text-white"
                 />
                 <ModalMediaActions onJoinRoom={joinRoom} />
             </div>

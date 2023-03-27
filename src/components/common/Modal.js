@@ -8,16 +8,18 @@ export const Modal = ({isOpen, onClose, children, title}) => {
     }
 
     return (
-        <div className="fixed inset-0 z-50 overflow-auto bg-white flex">
+        <div className="modal__wrapper">
             <div
-                className="relative p-4 sm:p-6 mx-auto my-8 sm:my-16 md:my-32 max-w-3xl w-full h-auto max-h-full overflow-auto bg-white rounded shadow-lg">
+                className="modal__container">
                 <button
                     onClick={onClose}
-                    className="absolute top-0 right-0 p-2 text-gray-500 hover:text-gray-700"
+                    className="modal__close"
                 >
                     &times;
                 </button>
-                <Title title={title}/>
+                <div className="text-center">
+                    <Title title={title}/>
+                </div>
                 {children}
             </div>
         </div>

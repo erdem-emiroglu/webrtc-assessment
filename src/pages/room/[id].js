@@ -253,23 +253,18 @@ const Room = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-light">
-            <div className="flex flex-col items-center w-full max-w-screen-md space-y-4">
-                <video autoPlay ref={userVideoRef}
-                       className="w-64 h-64 md:w-96 md:h-96 border-4 border-blue rounded-lg shadow-lg"/>
-                <video autoPlay ref={peerVideoRef}
-                       className="w-64 h-64 md:w-96 md:h-96 border-4 border-purple rounded-lg shadow-lg"/>
+        <div className="room__wrapper">
+            <div className="room__container">
+                <video autoPlay ref={userVideoRef} className="video__container border-blue"/>
+                <video autoPlay ref={peerVideoRef} className="video__container border-purple"/>
                 <div className="flex space-x-4">
-                    <button onClick={toggleMic} type="button"
-                            className="bg-blue text-white rounded-lg px-4 py-2 hover:bg-blue-700">
+                    <button onClick={toggleMic} type="button" className="media__toggle__btn bg-blue">
                         {micActive ? 'Mute Mic' : 'Unmute Mic'}
                     </button>
-                    <button onClick={leaveRoom} type="button"
-                            className="bg-orange text-white rounded-lg px-4 py-2 hover:bg-orange-700">
+                    <button onClick={leaveRoom} type="button" className="media__toggle__btn bg-orange">
                         Leave
                     </button>
-                    <button onClick={toggleCamera} type="button"
-                            className="bg-green text-white rounded-lg px-4 py-2 hover:bg-green-700">
+                    <button onClick={toggleCamera} type="button" className="media__toggle__btn bg-green">
                         {cameraActive ? 'Stop Camera' : 'Start Camera'}
                     </button>
                 </div>
