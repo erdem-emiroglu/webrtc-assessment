@@ -1,6 +1,6 @@
 ## How to run the project
 
-### First, please make sure you are using node version (v16.x.y)!
+### First, please make sure you are using node version (v16.x.y) or higher!
 
 Then, install the dependencies:
 ```bash
